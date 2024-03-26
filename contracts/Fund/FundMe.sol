@@ -4,6 +4,8 @@ pragma solidity ^0.8.8;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 import "hardhat/console.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+
 
 error FundMe__NotOwner();
 
@@ -38,7 +40,8 @@ contract FundMe {
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, "You need to spend more ETH!");
+        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, Strings.toString(msg.value));
+        //console.log("ETH sent: ", Strings.toString(msg.value));
         // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
         s_addressToAmountFunded[msg.sender] += msg.value;
         s_funders.push(msg.sender);
